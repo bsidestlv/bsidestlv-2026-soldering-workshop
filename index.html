@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BSidesTLV Badge — Soldering Guide</title>
+<style>
+  :root{
+    --bg:#0b1726; --bg2:#10203a; --card:#14263f; --card2:#1a3254;
+    --ink:#eaf2ff; --mut:#9fb6d4; --line:#27456e;
+    --blue:#3da9fc; --blueink:#bfe0ff; --warn:#ffb020; --ok:#45d483; --bad:#ff6b6b;
+    --rad:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:linear-gradient(180deg,#081320,#0b1726 40%);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--blue)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px}
+  header.hero{padding:48px 16px 24px;text-align:center}
+  .badgePill{display:inline-block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--blueink);border:1px solid var(--line);border-radius:999px;padding:6px 14px;margin-bottom:18px}
+  h1{font-size:clamp(28px,6vw,46px);margin:.1em 0 .2em;line-height:1.05}
+  h1 .tlv{color:var(--blue)}
+  .sub{color:var(--mut);max-width:640px;margin:0 auto 26px;font-size:18px}
+  .heroImg{max-width:430px;width:100%;border-radius:var(--rad);border:1px solid var(--line);
+    box-shadow:0 20px 50px rgba(0,0,0,.5)}
+  section{padding:34px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(22px,4vw,30px);margin:0 0 6px}
+  h2 .n{color:var(--blue);font-variant-numeric:tabular-nums;margin-right:10px}
+  .lead{color:var(--mut);margin:0 0 22px;max-width:70ch}
+  h3{font-size:19px;margin:26px 0 8px}
+  .grid{display:grid;gap:16px}
+  @media(min-width:620px){.cols2{grid-template-columns:1fr 1fr}.cols3{grid-template-columns:1fr 1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px}
+  .part{display:flex;flex-direction:column}
+  .part img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;border-radius:12px}
+  .part .ref{display:flex;align-items:baseline;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .ref .des{font-weight:700;font-size:18px;color:var(--blueink)}
+  .ref .qty{font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
+  .ref .val{font-weight:600}
+  .part .desc{color:var(--mut);font-size:14px;margin-top:4px}
+  .lcsc{font-size:12px;color:var(--mut);margin-top:8px}
+  .bands{font-size:12px;margin-top:8px}
+  .chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;margin:6px 6px 0 0;
+    border:1px solid var(--line);color:var(--blueink)}
+  .chip.pol{border-color:var(--warn);color:var(--warn)}
+  .chip.np{border-color:var(--ok);color:var(--ok)}
+  .callout{background:var(--card2);border:1px solid var(--blue);border-left:4px solid var(--blue);
+    border-radius:12px;padding:16px 18px;margin:18px 0}
+  .callout.warn{border-color:var(--warn);border-left-color:var(--warn)}
+  .callout b{color:var(--blueink)}
+  .callout.warn b{color:var(--warn)}
+  figure{margin:18px 0}
+  figure img{width:100%;border-radius:var(--rad);border:1px solid var(--line)}
+  figcaption{color:var(--mut);font-size:14px;margin-top:8px;text-align:center}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  ol.steps>li{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--rad);
+    padding:16px 16px 16px 60px;margin:0 0 12px}
+  ol.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:14px;
+    width:32px;height:32px;border-radius:50%;background:var(--blue);color:#06121f;font-weight:800;
+    display:grid;place-items:center}
+  ol.steps>li b{color:var(--blueink)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+  .dir{display:grid;gap:16px}
+  @media(min-width:620px){.dir{grid-template-columns:1fr 1fr}}
+  .dir .card h3{margin-top:0;color:var(--blueink)}
+  .legend{color:var(--mut);font-size:14px}
+  .trouble dt{font-weight:700;color:var(--blueink);margin-top:14px}
+  .trouble dd{margin:4px 0 0;color:var(--mut)}
+  footer{padding:40px 16px 60px;text-align:center;color:var(--mut);font-size:14px}
+  .flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0 0;
+    color:var(--blueink);font-weight:600}
+  .flow span{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:6px 12px}
+  .flow i{color:var(--blue);font-style:normal}
+  .mut{color:var(--mut)}
+  .nowrap{white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="badgePill">BSidesTLV 2026 · Tiny Badge</div>
+    <h1>Soldering the <span class="tlv">BSidesTLV</span> LED Badge</h1>
+    <p class="sub">A beginner-friendly, through-hole soldering kit. No experience needed —
+    the board literally tells you where each part goes. Follow along top to bottom.</p>
+    <img class="heroImg" src="img/solution.jpg" alt="Finished BSidesTLV badge with all components soldered">
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="what">
+    <h2><span class="n">1</span>What you're building</h2>
+    <p class="lead">A round light-up badge. A <b>555 timer</b> (U1) makes a steady tick. A
+    <b>CD4017 counter</b> (U2) takes each tick and lights the LEDs one after another, so they
+    chase around the board. The <b>trimmer (RV1)</b> sets the speed. Powered by a single CR2032 coin cell.</p>
+    <div class="flow">
+      <span>CR2032</span><i>→</i><span>555 clock (U1)</span><i>→</i><span>4017 counter (U2)</span><i>→</i><span>LEDs chase</span>
+    </div>
+    <div class="callout">
+      <b>The #1 rule: read the silkscreen.</b> Every component has a white printed label and
+      outline on the board — <b>1u</b>, <b>470R</b>, <b>TLC555P</b>, <b>CD4017BE</b>, and so on.
+      Put each part on its matching label. For the parts that have a direction (chips, LEDs, the
+      1µF cap) the printed outline also shows <i>which way round</i> they go. When in doubt, trust the board.
+    </div>
+  </section>
+
+  <section id="tools">
+    <h2><span class="n">2</span>Tools &amp; a 20-second soldering primer</h2>
+    <div class="grid cols2">
+      <div class="card">
+        <h3 style="margin-top:0">You need</h3>
+        <ul style="margin:0;padding-left:18px" class="mut">
+          <li>Soldering iron (~ 320–350 °C) + thin solder</li>
+          <li>Flush side-cutters (to trim leads)</li>
+          <li>Something to hold the board (helping hands / tape)</li>
+          <li>A CR2032 coin cell to test</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">How a joint is made</h3>
+        <ol style="margin:0;padding-left:18px" class="mut">
+          <li>Push the lead through from the <b>printed side</b>.</li>
+          <li>Heat the <b>pad and the lead together</b> for ~1 second.</li>
+          <li>Feed solder into the joint (not onto the tip) until it forms a small shiny cone.</li>
+          <li>Remove solder, then iron. Snip the excess lead.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="callout warn">
+      <b>Heads up:</b> the components mount on the side with the white labels. The pretty
+      artwork (Alice &amp; the rabbit) is the <i>back</i> of the badge — you solder from the plain/label side.
+    </div>
+  </section>
+
+  <section id="bom">
+    <h2><span class="n">3</span>The components</h2>
+    <p class="lead">Photos below are of the exact parts (from LCSC). Match each to its silkscreen label.
+    Note the two polarity tags: <span class="chip np">non-polar · any way</span>
+    <span class="chip pol">has a direction</span></p>
+
+    <div class="grid cols3">
+
+      <div class="card part">
+        <img src="img/C57436.jpg" alt="10k metal-film resistor">
+        <div class="ref"><span class="des">R1</span><span class="qty">×1</span><span class="val">10 kΩ</span></div>
+        <div class="desc">Sets the 555's tick rate. Metal-film resistor.</div>
+        <div class="bands mut">Bands: <span class="nowrap">Brown · Black · Black · Red · Brown</span></div>
+        <div class="chip np">non-polar · any way</div>
+        <div class="lcsc">LCSC C57436</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C1374787.jpg" alt="470 ohm metal-film resistor">
+        <div class="ref"><span class="des">R2–R5</span><span class="qty">×4</span><span class="val">470 Ω</span></div>
+        <div class="desc">Current limiters — one per LED. Same body as the 10k, different stripes.</div>
+        <div class="bands mut">Bands: <span class="nowrap">Yellow · Violet · Black · Black · Brown</span></div>
+        <div class="chip np">non-polar · any way</div>
+        <div class="lcsc">LCSC C1374787</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C48641852.jpg" alt="500k trimmer potentiometer">
+        <div class="ref"><span class="des">RV1</span><span class="qty">×1</span><span class="val">500 kΩ</span></div>
+        <div class="desc">Blue trimmer. Turn it later to set the chase speed. 3 legs — fits only one way.</div>
+        <div class="chip np">3 pins · only fits one way</div>
+        <div class="lcsc">LCSC C48641852</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C910886.jpg" alt="TLC555 timer DIP-8 IC">
+        <div class="ref"><span class="des">U1</span><span class="qty">×1</span><span class="val">TLC555P</span></div>
+        <div class="desc">8-pin timer chip — the oscillator. <b>Has a notch / pin-1 dot.</b></div>
+        <div class="chip pol">notch must match board</div>
+        <div class="lcsc">LCSC C910886</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C51898328.jpg" alt="CD4017 decade counter DIP-16 IC">
+        <div class="ref"><span class="des">U2</span><span class="qty">×1</span><span class="val">CD4017BE</span></div>
+        <div class="desc">16-pin counter — sequences the LEDs. <b>Has a notch / pin-1 dot.</b></div>
+        <div class="chip pol">notch must match board</div>
+        <div class="lcsc">LCSC C51898328</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C2895496.jpg" alt="5mm LED">
+        <div class="ref"><span class="des">D1–D4</span><span class="qty">×4</span><span class="val">LED 5 mm</span></div>
+        <div class="desc">The chasing lights. <b>Long leg = +, flat side = –.</b> Colour is cosmetic
+        (kit may ship blue or red).</div>
+        <div class="chip pol">flat side / short leg = cathode</div>
+        <div class="lcsc">LCSC C2895496 (blue) / C473831 (red)</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C1579562.jpg" alt="1uF electrolytic capacitor">
+        <div class="ref"><span class="des">C1</span><span class="qty">×1</span><span class="val">1 µF</span></div>
+        <div class="desc">Electrolytic (metal can) — the 555's timing cap. <b>The one polarized capacitor.</b></div>
+        <div class="chip pol">stripe = – · long leg = +</div>
+        <div class="lcsc">LCSC C1579562</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C1620210.jpg" alt="100nF ceramic capacitor">
+        <div class="ref"><span class="des">C2</span><span class="qty">×1</span><span class="val">10 n → 100 n</span></div>
+        <div class="desc"><b>Substitution:</b> board is marked <b>10n</b>, but this build uses a
+        <b>100 nF</b> ceramic (part was out of stock). Circuit still works fine. Non-polar.</div>
+        <div class="chip np">non-polar · any way</div>
+        <div class="lcsc">LCSC C1620210 · orig 10n was C51899417</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C506840.jpg" alt="100nF film capacitor">
+        <div class="ref"><span class="des">C3</span><span class="qty">×1</span><span class="val">100 nF</span></div>
+        <div class="desc">Red box film capacitor — supply smoothing. Non-polar.</div>
+        <div class="chip np">non-polar · any way</div>
+        <div class="lcsc">LCSC C506840</div>
+      </div>
+
+      <div class="card part">
+        <img src="img/C5239862.jpg" alt="CR2032 coin cell holder">
+        <div class="ref"><span class="des">BAT1</span><span class="qty">×1</span><span class="val">CR2032 holder</span></div>
+        <div class="desc">Coin-cell holder. Mounts on the printed side; the opening faces out so you can slide the cell in.</div>
+        <div class="chip pol">fits one way · + faces up</div>
+        <div class="lcsc">LCSC C5239862</div>
+      </div>
+
+    </div>
+
+    <div class="callout">
+      <b>About the 100 nF swap (C2):</b> the silkscreen says <b>10n</b>. This build intentionally
+      uses a <b>100 nF</b> ceramic there instead. It's a drop-in for this badge — don't let the
+      label/value mismatch worry you. Everything else matches the board exactly.
+    </div>
+  </section>
+
+  <section id="direction">
+    <h2><span class="n">4</span>Direction matters — these 3 go only one way</h2>
+    <p class="lead">Resistors, the 100 nF and 10 nF caps, and the trimmer don't care which way round
+    they sit. <b>The chips, the LEDs, and the 1 µF electrolytic do.</b> Get these right and the badge works first try.</p>
+
+    <div class="dir">
+      <div class="card">
+        <h3>The two chips — U1 &amp; U2</h3>
+        <p class="mut">Each chip has a <b>half-moon notch</b> at one end (and often a dotted pin-1 corner).
+        The board's printed outline has the <b>same notch drawn on it</b>. Rotate the chip so its notch
+        lines up with the notch on the silkscreen, then press it in.</p>
+        <p class="mut">On this board: <b>TLC555P (U1)</b> notch points up toward the cap row;
+        <b>CD4017BE (U2)</b> notch faces the trimmer (RV1) side. Always go by the printed outline.</p>
+      </div>
+      <div class="card">
+        <h3>The LEDs — D1 to D4</h3>
+        <p class="mut">An LED has a <b>long leg (+ / anode)</b> and a <b>short leg</b> on the side where
+        the plastic rim is <b>flattened (– / cathode)</b>.</p>
+        <p class="mut">The silkscreen circle for each LED has <b>one flat edge</b> — line the LED's flat
+        side up with the flat on the print. Short leg to the flat. All four LEDs face the same logic; just
+        follow each printed outline.</p>
+      </div>
+      <div class="card">
+        <h3>The 1 µF electrolytic — C1</h3>
+        <p class="mut">This metal-can cap is the <b>only polarized capacitor</b>. It has a
+        <b>printed stripe</b> down one side marking the <b>negative (–)</b> lead, which is also the
+        <b>shorter leg</b>. The other, longer leg is <b>positive (+)</b>.</p>
+        <p class="mut">C1 is the <b>left-most</b> of the three top caps (marked <b>1u</b>). Put the
+        <b>– stripe / short leg in the inner hole</b> (the one nearest the <b>10n</b> cap — that pad is
+        ground) and the <b>+ long leg in the outer hole</b>. Backwards, an electrolytic can bulge or fail.</p>
+      </div>
+      <div class="card">
+        <h3>Everything else</h3>
+        <p class="mut">Resistors (R1, R2–R5), the <b>10n/100n</b> and <b>100n</b> ceramics/film (C2, C3)
+        are <b>symmetric</b> — either orientation is fine. The trimmer (RV1) and battery holder (BAT1)
+        have an odd leg pattern and physically fit only one way.</p>
+      </div>
+    </div>
+
+    <figure>
+      <img src="img/pcb_comp.jpg" alt="Component-side placement map showing every silkscreen label and outline">
+      <figcaption>Placement map — the component side. Every part sits on its printed label:
+      the cap row (1u / 10n / 100n), TLC555P &amp; its 10k, the four 470R, the four LEDs, CD4017BE,
+      the 500k trimmer, and the CR2032 holder.</figcaption>
+    </figure>
+  </section>
+
+  <section id="order">
+    <h2><span class="n">5</span>Soldering order — shortest parts first</h2>
+    <p class="lead">Work from the flattest components up to the tallest. That way the board can lie
+    face-down on the bench and each part stays pressed against it while you solder.</p>
+    <ol class="steps">
+      <li><b>Resistors — R1 (10k) and R2–R5 (470R).</b> Bend the legs, drop each on its label, solder,
+        snip. Double-check the 10k (Brown-Black-Black-Red-Brown) goes to the <b>10k</b> spot and the four
+        470R to the <b>470R</b> spots.</li>
+      <li><b>The two chips — U1 (TLC555P) &amp; U2 (CD4017BE).</b> Match the <b>notch to the printed
+        notch</b>. Solder one corner pin, check it sits flat, then do the rest. (No sockets in this kit —
+        the chips solder straight in.)</li>
+      <li><b>Ceramic / film caps — C2 (100n here) &amp; C3 (100n).</b> Non-polar, any way round.</li>
+      <li><b>LEDs — D1–D4.</b> <b>Flat side / short leg to the flat on the silkscreen.</b> Solder one
+        leg, confirm the LED stands straight, then the other.</li>
+      <li><b>1 µF electrolytic — C1.</b> <b>Stripe / short leg (–) to the inner (10n-side) hole;
+        long leg (+) to the outer hole.</b></li>
+      <li><b>Trimmer — RV1 (500k).</b> Press flat, solder its three legs.</li>
+      <li><b>Battery holder — BAT1.</b> Tallest part, last. Make sure it sits flush; solder its tabs well
+        (they take mechanical stress when you insert the cell).</li>
+    </ol>
+  </section>
+
+  <section id="test">
+    <h2><span class="n">6</span>Power up &amp; adjust</h2>
+    <ol class="steps">
+      <li><b>Inspect first.</b> All joints shiny little cones, no blobs bridging two pads, every lead
+        snipped. Re-check the chip notches, LED flats and the C1 stripe.</li>
+      <li><b>Insert the CR2032</b> into BAT1, <b>+ (printed side) facing up</b>, away from the board.</li>
+      <li><b>Watch the LEDs chase.</b> Then turn <b>RV1</b> slowly with a small screwdriver to speed the
+        chase up or slow it down.</li>
+    </ol>
+
+    <h3>If it doesn't light</h3>
+    <dl class="trouble">
+      <dt>Nothing at all</dt>
+      <dd>Check the coin cell orientation (+ up) and that the holder tabs are well soldered. Re-flow any
+        dull joint on U1, U2 and the battery holder.</dd>
+      <dt>One LED never lights, others do</dt>
+      <dd>That LED is in backwards or has a cold joint — its <b>flat/short leg</b> must go to the flat on the print.</dd>
+      <dt>LEDs light but never move / chase</dt>
+      <dd>Suspect U1 (555) or its timing parts: C1 orientation (stripe to the inner/ground hole), the 10k
+        (R1), and the 1 µF. Also confirm U2's notch is correct.</dd>
+      <dt>Chase speed won't change</dt>
+      <dd>Re-solder RV1's three legs and give the trimmer a full sweep.</dd>
+    </dl>
+  </section>
+
+  <section id="done">
+    <h2><span class="n">7</span>You're done 🎉</h2>
+    <div class="grid cols2">
+      <figure style="margin:0">
+        <img src="img/solution.jpg" alt="Finished badge, component side">
+        <figcaption>Front — your finished work.</figcaption>
+      </figure>
+      <figure style="margin:0">
+        <img src="img/pcb_top.jpg" alt="Badge back artwork">
+        <figcaption>Back — the Alice-in-Wonderland artwork.</figcaption>
+      </figure>
+    </div>
+    <p class="lead" style="margin-top:22px">Wear it, trade it, and welcome to BSidesTLV. The whole trick
+    was simple: <b>every part belongs on its printed label, and the board shows you which way round the
+    chips, LEDs and 1 µF cap go.</b></p>
+  </section>
+
+</main>
+
+<footer>
+  BSidesTLV Tiny Badge soldering guide · component photos courtesy of LCSC ·
+  C2 uses a 100 nF ceramic in place of the board's 10 nF.
+</footer>
+
+</body>
+</html>
